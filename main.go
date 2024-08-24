@@ -2,13 +2,27 @@ package main
 
 import (
 	"fmt"
+	"go-with-tests/di"
+	"io"
+	"net/http"
 )
 
-func main() {
-	s := "gopher"
-	fmt.Printf("Hello and welcome, %s!\n", s)
+func Greet(writer io.Writer, name string) {
+	fmt.Fprintf(writer, "Hello, %s", name)
+}
 
-	for i := 1; i <= 5; i++ {
-		fmt.Println("i =", 100/i)
-	}
+func MyGreeterHandler(w http.ResponseWriter, r *http.Request) {
+	Greet(w, "world")
+}
+
+func main() {
+	repo := di.NewSumRepo()
+	repo.Add(10)
+
+	di.Calculate(repo)
+
+	test := repo.GetAll()
+	_ = append(test, 3)
+
+	fmt.Printf("%v", test)
 }
