@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"go-with-tests/di"
+	"go-with-tests/mocking"
 	"io"
 	"net/http"
+	"os"
+	"time"
 )
 
 func Greet(writer io.Writer, name string) {
@@ -16,13 +18,6 @@ func MyGreeterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	repo := di.NewSumRepo()
-	repo.Add(10)
-
-	di.Calculate(repo)
-
-	test := repo.GetAll()
-	_ = append(test, 3)
-
-	fmt.Printf("%v", test)
+	sleeper := mocking.ConfigurableSleeper{Duration: 1 * time.Second, SleepFunc: time.Sleep}
+	mocking.Countdown(os.Stdout, &sleeper)
 }
